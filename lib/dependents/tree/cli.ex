@@ -12,6 +12,7 @@ defmodule Dependents.Tree.CLI do
   @type parsed :: {app} | :all | :help
 
   @aliases Application.get_env(@app, :aliases)
+  @cwd File.cwd!()
   @strict Application.get_env(@app, :strict)
   @switches Application.get_env(@app, :default_switches)
 
@@ -24,11 +25,13 @@ defmodule Dependents.Tree.CLI do
   """
   @spec main([String.t()]) :: :ok | no_return
   def main(argv) do
-    with {app} when is_atom(app) <- parse(argv) do
+    with {app} when is_atom(app) <- parse(argv),
+         true <- @cwd |> Path.join("../#{app}/mix.exs") |> File.exists?() do
       Tree.print(app)
     else
-      :all -> Tree.print(:*)
+      false -> Help.show_help()
       :help -> Help.show_help()
+      :all -> Tree.print(:*)
     end
   end
 
