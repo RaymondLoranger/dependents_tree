@@ -22,4 +22,4 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 dependents_tree-*.tar
 
-deps_tree
+deps?tree
