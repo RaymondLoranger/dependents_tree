@@ -5,8 +5,8 @@ defmodule Dependents.Tree.Parser do
   @typedoc "Dependent (not dependency)"
   @type dep :: Application.app()
 
-  # mix deps.tree --format dot
   @cwd File.cwd!()
+  # mix deps.tree --format dot
   @folder_regex ~r|^.+/(\w+)/deps_tree.dot$|
   @glob @cwd |> Path.join("../*/deps_tree.dot") |> Path.expand()
 
@@ -17,6 +17,7 @@ defmodule Dependents.Tree.Parser do
 
     paths
     |> Enum.zip(folders)
+    |> Enum.reject(fn {_path, folder} -> is_nil(folder) end)
     |> Enum.map(&path_to_map(&1, folders))
     |> Enum.reduce(%{}, &merge_maps/2)
   end
@@ -47,17 +48,20 @@ defmodule Dependents.Tree.Parser do
   @spec paths(Path.t()) :: [Path.t()]
   defp paths(glob), do: Path.wildcard(glob)
 
-  @spec folders([Path.t()]) :: [String.t()]
+  @spec folders([Path.t()]) :: [String.t() | nil]
   defp folders(paths) do
     for path <- paths do
       folder(path)
     end
   end
 
-  @spec folder(Path.t()) :: String.t()
+  @spec folder(Path.t()) :: String.t() | nil
   defp folder(path) do
-    [_full, folder] = Regex.run(@folder_regex, path)
-    folder
+    case Regex.run(@folder_regex, path) do
+      [_full, folder] -> folder
+      # folder may contain spaces (not \w)
+      nil -> nil
+    end
   end
 
   @spec path_to_map({Path.t(), String.t()}, [String.t()]) :: map
