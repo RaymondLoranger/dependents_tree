@@ -35,7 +35,7 @@ config :dependents_tree,
 
 config :io_ansi_table, align_specs: [center: :hex]
 config :io_ansi_table, bell: false
-config :io_ansi_table, count: 55
+config :io_ansi_table, count: 999
 
 config :io_ansi_table,
   headers: [
