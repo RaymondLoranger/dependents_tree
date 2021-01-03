@@ -4,17 +4,21 @@ defmodule Dependents.Tree.MixProject do
   def project do
     [
       app: :dependents_tree,
-      version: "0.1.5",
-      elixir: "~> 1.7",
+      version: "0.1.6",
+      elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       escript: escript(),
-      deps: deps()
+      deps: deps(),
+      # Dependents.Tree.print/1...
+      dialyzer: [plt_add_apps: [:io_ansi_table]]
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
+      # Only using the `IO.ANSI.Table.write/2` function.
+      included_applications: [:io_ansi_table],
       extra_applications: [:logger]
     ]
   end
@@ -22,13 +26,12 @@ defmodule Dependents.Tree.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.22", only: :dev, runtime: false},
+      {:io_ansi_table, "~> 1.0"},
       {:mix_tasks,
        github: "RaymondLoranger/mix_tasks", only: :dev, runtime: false},
-      {:persist_config, "~> 0.1"},
-      {:io_ansi_table, "~> 0.4"},
-      {:earmark, "~> 1.0", only: :dev},
-      {:ex_doc, "~> 0.14", only: :dev, runtime: false},
-      {:dialyxir, "~> 0.5", only: :dev, runtime: false}
+      {:persist_config, "~> 0.4", runtime: false}
     ]
   end
 

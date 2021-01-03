@@ -1,18 +1,18 @@
 defmodule Dependents.Tree.Help do
   use PersistConfig
 
-  @escript Mix.Local.name_for(:escript, Mix.Project.config())
-  @help_attrs Application.get_env(@app, :help_attrs)
+  @escript Mix.Project.config()[:escript][:name]
+  @help_attrs get_env(:help_attrs)
 
   @spec show_help() :: no_return
   def show_help() do
     # Examples of usage on Windows:
-    #   escript deps --help
-    #   escript deps file_only_logger
-    #   escript deps
-    #   escript deps --all
+    #   escript deps_tree --help
+    #   escript deps_tree file_only_logger
+    #   escript deps_tree
+    #   escript deps_tree --all
     # Examples of usage on macOS:
-    #   ./deps -a
+    #   ./deps_tree -a
     {types, texts} =
       case :os.type() do
         {:win32, _} ->
@@ -23,7 +23,7 @@ defmodule Dependents.Tree.Help do
           {[:section, :normal], ["usage:", " ./#{@escript}"]}
       end
 
-    filler = " " |> String.duplicate(texts |> Enum.join() |> String.length())
+    filler = String.duplicate(" ", Enum.join(texts) |> String.length())
     prefix = help_format(types, texts)
     item_help = help_format([:switch], ["[(-h | --help)]"])
     item_all = help_format([:switch], ["[(-a | --all)]"])
