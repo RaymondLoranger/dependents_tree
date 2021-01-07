@@ -7,6 +7,7 @@ defmodule Dependents.Tree.CLI do
 
   alias Dependents.Tree.Help
   alias Dependents.Tree
+  alias IO.ANSI.Table
 
   @type app :: Application.app()
   @type parsed :: {app} | :all | :help
@@ -15,6 +16,7 @@ defmodule Dependents.Tree.CLI do
   @cwd File.cwd!()
   @strict get_env(:strict)
   @switches get_env(:default_switches)
+  @table_spec get_env(:table_spec)
 
   @doc """
   Parses and processes `argv` (command line arguments).
@@ -23,18 +25,26 @@ defmodule Dependents.Tree.CLI do
 
     - `argv` - command line arguments (list)
   """
-  @dialyzer {:nowarn_function, main: 1}
   @spec main([String.t()]) :: :ok | no_return
   def main(argv) do
-    with {app} when is_atom(app) <- parse(argv),
-         true <- Path.join(@cwd, "../#{app}/mix.exs") |> File.exists?() do
-      Tree.print(app)
-    else
-      false -> Help.show_help()
-      :help -> Help.show_help()
-      :all -> Tree.print(:all)
+    case parse(argv) do
+      {app} ->
+        if project?(app),
+          do: Tree.to_maps(app) |> Table.write(@table_spec),
+          else: Help.show_help()
+
+      :all ->
+        Tree.to_maps(:*) |> Table.write(@table_spec)
+
+      :help ->
+        Help.show_help()
     end
   end
+
+  ## Private functions
+
+  @spec project?(atom) :: boolean
+  defp project?(app), do: Path.join(@cwd, "../#{app}/mix.exs") |> File.exists?()
 
   # @doc ~S"""
   # Parses `argv` (command line arguments).
@@ -84,8 +94,6 @@ defmodule Dependents.Tree.CLI do
     |> OptionParser.parse(strict: @strict, aliases: @aliases)
     |> to_parsed()
   end
-
-  ## Private functions
 
   # @doc ~S"""
   # Converts the output of `OptionParser.parse/2` to `parsed`.

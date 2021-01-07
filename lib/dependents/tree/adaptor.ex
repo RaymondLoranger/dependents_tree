@@ -7,6 +7,22 @@ defmodule Dependents.Tree.Adaptor do
   @type dep :: Application.app()
   @type table_map :: map
 
+  @doc """
+  Converts an application `tree` to a list of `table_maps`.
+
+  ## Examples
+
+      iex> alias Dependents.Tree.Adaptor
+      iex> tree = %{
+      ...>   io_ansi_table: [:noaa_observations, :github_issues],
+      ...>   map_sorter: [:io_ansi_table]
+      ...> }
+      iex> ranks = %{io_ansi_table: 27, map_sorter: 25}
+      iex> maps = Adaptor.tree_to_maps(tree, ranks)
+      iex> Enum.all?(maps, &is_map/1) and length(maps) == 2 and
+      ...> Enum.all?(maps, &map_size(&1) == 10)
+      true
+  """
   @spec tree_to_maps(%{app => [dep]}, %{app => pos_integer}) :: [table_map]
   def tree_to_maps(tree, ranks) do
     for {app, deps} <- tree do

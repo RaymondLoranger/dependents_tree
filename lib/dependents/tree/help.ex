@@ -46,7 +46,7 @@ defmodule Dependents.Tree.Help do
     #{item_default_app}
     """)
 
-    System.halt(0)
+    System.stop(0)
   end
 
   ## Private functions
