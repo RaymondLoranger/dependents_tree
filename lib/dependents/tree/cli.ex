@@ -19,7 +19,7 @@ defmodule Dependents.Tree.CLI do
   @table_spec get_env(:table_spec)
 
   @doc """
-  Parses and processes `argv` (command line arguments).
+  Parses the command line and prints a dependents tree table.
 
   ## Parameters
 
@@ -43,10 +43,10 @@ defmodule Dependents.Tree.CLI do
 
   ## Private functions
 
-  @spec project?(atom) :: boolean
+  @spec project?(app) :: boolean
   defp project?(app), do: Path.join(@cwd, "../#{app}/mix.exs") |> File.exists?()
 
-  # @doc ~S"""
+  # @doc """
   # Parses `argv` (command line arguments).
 
   # `argv` can be "-h" or "--help", which returns :help.
@@ -95,7 +95,7 @@ defmodule Dependents.Tree.CLI do
     |> to_parsed()
   end
 
-  # @doc ~S"""
+  # @doc """
   # Converts the output of `OptionParser.parse/2` to `parsed`.
 
   # ## Examples
@@ -126,7 +126,7 @@ defmodule Dependents.Tree.CLI do
   # """
   @spec to_parsed({Keyword.t(), [String.t()], [tuple]}) :: parsed
   defp to_parsed({switches, args, []}) do
-    with {app} when is_atom(app) <- to_tuple(args),
+    with {app} <- to_tuple(args),
          %{help: false, all: false} <-
            Map.merge(Map.new(@switches), Map.new(switches)) do
       {app}
@@ -138,7 +138,7 @@ defmodule Dependents.Tree.CLI do
 
   defp to_parsed(_), do: :help
 
-  # @doc ~S"""
+  # @doc """
   # Converts `args` to a tuple or `:error`.
 
   # ## Examples
