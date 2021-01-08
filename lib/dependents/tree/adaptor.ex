@@ -49,8 +49,8 @@ defmodule Dependents.Tree.Adaptor do
   ## Private functions
 
   @spec chunk_deps([dep]) :: [[dep | nil]]
-  def chunk_deps([]), do: [[nil, nil, nil, nil]]
-  def chunk_deps(deps), do: Enum.chunk_every(deps, 4, 4, [nil, nil, nil])
+  defp chunk_deps([]), do: [[nil, nil, nil, nil]]
+  defp chunk_deps(deps), do: Enum.chunk_every(deps, 4, 4, [nil, nil, nil])
 
   @spec zap_dup(any, non_neg_integer) :: any | nil
   defp zap_dup(true, index) do
