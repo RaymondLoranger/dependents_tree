@@ -9,8 +9,7 @@ defmodule Dependents.Tree.CLI do
   alias Dependents.Tree
   alias IO.ANSI.Table
 
-  @type app :: Application.app()
-  @type parsed :: {app} | :all | :help
+  @type parsed :: {Tree.app()} | :all | :help
 
   @aliases get_env(:aliases)
   @cwd File.cwd!()
@@ -43,7 +42,7 @@ defmodule Dependents.Tree.CLI do
 
   ## Private functions
 
-  @spec project?(app) :: boolean
+  @spec project?(Tree.app()) :: boolean
   defp project?(app), do: Path.join(@cwd, "../#{app}/mix.exs") |> File.exists?()
 
   # @doc """
@@ -96,7 +95,7 @@ defmodule Dependents.Tree.CLI do
   end
 
   # @doc """
-  # Converts the output of `OptionParser.parse/2` to `parsed`.
+  # Converts the output of `OptionParser.parse/2` into `parsed`.
 
   # ## Examples
 
@@ -139,7 +138,7 @@ defmodule Dependents.Tree.CLI do
   defp to_parsed(_), do: :help
 
   # @doc """
-  # Converts `args` to a tuple or `:error`.
+  # Converts `args` into a tuple or `:error`.
 
   # ## Examples
 
@@ -159,7 +158,7 @@ defmodule Dependents.Tree.CLI do
   #     iex> CLI.to_tuple([:all])
   #     :error
   # """
-  @spec to_tuple([String.t()]) :: {app} | :error
+  @spec to_tuple([String.t()]) :: {Tree.app()} | :error
   defp to_tuple([] = _args) do
     {Path.expand(".") |> Path.basename() |> String.to_atom()}
   end
