@@ -1,7 +1,7 @@
 defmodule Dependents.Tree.Proxy do
   @moduledoc """
   Creates a `dependents tree` of all local apps.
-  Also converts a `dependents tree` into a list of `table_maps`.
+  Also converts a `dependents tree` into `table_maps`.
   """
 
   alias Dependents.Tree.DotGraph
@@ -38,7 +38,7 @@ defmodule Dependents.Tree.Proxy do
   end
 
   @doc """
-  Converts a `dependents tree` into a list of `table_maps`.
+  Converts a `dependents tree` into `table_maps`.
 
   ## Examples
 
@@ -74,7 +74,7 @@ defmodule Dependents.Tree.Proxy do
       chunk_deps(deps)
       |> Enum.with_index(1)
       |> Enum.map(fn {[dep1, dep2, dep3, dep4], index} ->
-        %{
+        _table_map = %{
           rank: ranks[app],
           chunk: index,
           ver: ver(app) |> zap_dup(index),
