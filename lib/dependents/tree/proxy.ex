@@ -7,9 +7,6 @@ defmodule Dependents.Tree.Proxy do
   alias Dependents.Tree.DotGraph
   alias Dependents.Tree
 
-  @cwd File.cwd!()
-  @glob Path.join(@cwd, "../*/deps_tree.dot") |> Path.expand()
-
   @doc """
   Creates a `dependents tree` of all local apps.
 
@@ -23,18 +20,20 @@ defmodule Dependents.Tree.Proxy do
   """
   @spec new :: Tree.t()
   def new do
-    paths = Path.wildcard(@glob)
+    paths = Path.wildcard("#{Tree.project_dir()}/*/deps_tree.dot")
     folders = Enum.map(paths, &DotGraph.folder/1)
 
     Enum.zip(paths, folders)
     |> Enum.reject(fn {_path, folder} -> is_nil(folder) end)
-    |> Enum.map(&DotGraph.to_tree(&1, folders))
-    |> Enum.reduce(%{}, fn tree, full_tree ->
-      Map.merge(full_tree, tree, fn
+    |> Enum.map(&Task.async(DotGraph, :to_tree, [&1, folders]))
+    |> Enum.map(&Task.await/1)
+    |> Enum.reduce(%{}, fn tree, acc_tree ->
+      Map.merge(acc_tree, tree, fn
         _app, deps, [] -> deps
         _app, deps, [dep] -> [dep | deps]
       end)
     end)
+    |> Map.new(fn {app, deps} -> {app, Enum.sort(deps)} end)
   end
 
   @doc """
@@ -80,7 +79,7 @@ defmodule Dependents.Tree.Proxy do
           ver: ver(app) |> zap_dup(index),
           hex: hex?(app) |> zap_dup(index),
           app: zap_dup(app, index),
-          deps: zap_dup(length(deps), index),
+          deps: length(deps) |> zap_dup(index),
           dependent_1: dep1,
           dependent_2: dep2,
           dependent_3: dep3,
@@ -107,9 +106,7 @@ defmodule Dependents.Tree.Proxy do
   end
 
   @spec mix_text(Tree.app()) :: String.t()
-  defp mix_text(app) do
-    Path.join(@cwd, "/../#{app}/mix.exs") |> Path.expand() |> File.read!()
-  end
+  defp mix_text(app), do: File.read!("#{Tree.project_dir()}/#{app}/mix.exs")
 
   @spec chunk_deps([Tree.dep()]) :: [[Tree.dep() | nil]]
   defp chunk_deps([]), do: [[nil, nil, nil, nil]]

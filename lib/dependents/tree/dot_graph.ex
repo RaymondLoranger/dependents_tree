@@ -16,7 +16,7 @@ defmodule Dependents.Tree.DotGraph do
   Returns a `dependents tree` where each dependency is a `tree app`
   and `folder` is its unique `tree dep`.
 
-  All `tree apps` and `tree deps` must be local apps i.e. project folders.
+  All `tree apps` and `tree deps` must be local apps i.e. project `folders`.
 
   ## Examples
 

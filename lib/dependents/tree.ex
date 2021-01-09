@@ -11,7 +11,7 @@ defmodule Dependents.Tree do
   @type app :: Application.app()
   @typedoc "Dependent (not dependency)"
   @type dep :: Application.app()
-  @typedoc "Ranks of local apps in a dependents tree"
+  @typedoc "Ranks of topologically sorted apps in a dependents tree"
   @type ranks :: %{app => pos_integer}
   @typedoc "Dependents tree mapping each local app to its local dependents"
   @type t :: %{app => [dep]}
@@ -53,4 +53,7 @@ defmodule Dependents.Tree do
 
   @spec to_maps(t, ranks) :: [table_map]
   defdelegate to_maps(tree, ranks), to: Proxy
+
+  @spec project_dir :: String.t()
+  def project_dir, do: get_env(:project_dir)
 end

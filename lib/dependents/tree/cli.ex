@@ -12,7 +12,6 @@ defmodule Dependents.Tree.CLI do
   @type parsed :: {Tree.app()} | :all | :help
 
   @aliases get_env(:aliases)
-  @cwd File.cwd!()
   @strict get_env(:strict)
   @switches get_env(:default_switches)
   @table_spec get_env(:table_spec)
@@ -43,7 +42,7 @@ defmodule Dependents.Tree.CLI do
   ## Private functions
 
   @spec project?(Tree.app()) :: boolean
-  defp project?(app), do: Path.join(@cwd, "../#{app}/mix.exs") |> File.exists?()
+  defp project?(app), do: File.exists?("#{Tree.project_dir()}/#{app}/mix.exs")
 
   # @doc """
   # Parses `argv` (command line arguments).
@@ -86,6 +85,10 @@ defmodule Dependents.Tree.CLI do
   #     iex> alias Dependents.Tree.CLI
   #     iex> CLI.parse(["file_only_logger"])
   #     {:file_only_logger}
+
+  #     iex> alias Dependents.Tree.CLI
+  #     iex> CLI.parse(["file only logger"])
+  #     {:"file only logger"}
   # """
   @spec parse([String.t()]) :: parsed
   defp parse(argv) do
@@ -122,6 +125,10 @@ defmodule Dependents.Tree.CLI do
   #     iex> alias Dependents.Tree.CLI
   #     iex> CLI.to_parsed({[], ["file_only_logger"], []})
   #     {:file_only_logger}
+
+  #     iex> alias Dependents.Tree.CLI
+  #     iex> CLI.to_parsed({[], ["file only logger"], []})
+  #     {:"file only logger"}
   # """
   @spec to_parsed({Keyword.t(), [String.t()], [tuple]}) :: parsed
   defp to_parsed({switches, args, []}) do
@@ -149,6 +156,10 @@ defmodule Dependents.Tree.CLI do
   #     iex> alias Dependents.Tree.CLI
   #     iex> CLI.to_tuple(["file_only_logger"])
   #     {:file_only_logger}
+
+  #     iex> alias Dependents.Tree.CLI
+  #     iex> CLI.to_tuple(["file only logger"])
+  #     {:"file only logger"}
 
   #     iex> alias Dependents.Tree.CLI
   #     iex> CLI.to_tuple(["?"])

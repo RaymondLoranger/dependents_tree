@@ -9,7 +9,7 @@ defmodule Dependents.Tree.MixProject do
       start_permanent: Mix.env() == :prod,
       escript: escript(),
       deps: deps(),
-      # Dependents.Tree.print/1...
+      # Dependents.Tree.CLI.main/1...
       dialyzer: [plt_add_apps: [:io_ansi_table]]
     ]
   end
