@@ -25,4 +25,5 @@ options = [
   style: :plain
 ]
 
-config :dependents_tree, table_spec: Spec.new(headers, options) |> Spec.extend()
+config :dependents_tree,
+  table_spec: Spec.new(headers, options) |> Spec.extend()
