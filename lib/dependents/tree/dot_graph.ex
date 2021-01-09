@@ -1,22 +1,23 @@
 defmodule Dependents.Tree.DotGraph do
   @moduledoc """
-  Converts a DOT graph (`deps_tree.dot`) into a `dependents tree`.
-  Also returns the folder of a DOT graph given its `path`.
+  Converts a DOT graph (deps_tree.dot) into a
+  [`dependents tree`](`t:Dependents.Tree.t/0`).
+  Also returns the folder of a DOT graph given its path.
 
   """
 
   alias Dependents.Tree
 
   @doc ~S"""
-  A DOT graph line maps an app to a dependency (`app` -> `dep`).
+  A DOT graph line links an app to a dependency (`app` -> `dep`).
 
   E.g. `"dependents_tree" -> "io_ansi_table" [label="~> 1.0"]`
 
   If `dep` is a dependency of `app` then `app` is dependent on `dep`.
-  Returns a `dependents tree` where each dependency is a `tree app`
-  and `folder` is its unique `tree dep`.
+  Returns a [`dependents tree`](`t:Dependents.Tree.t/0`) having each
+  dependency as a tree app and `folder` as the only tree dep.
 
-  All `tree apps` and `tree deps` must be local apps i.e. project `folders`.
+  All tree apps and tree deps must be local apps i.e. project `folders`.
 
   ## Examples
 
@@ -51,7 +52,7 @@ defmodule Dependents.Tree.DotGraph do
   end
 
   @doc ~S"""
-  Returns the folder of a DOT graph (`deps_tree.dot`) given its `path`.
+  Returns the folder of a DOT graph (deps_tree.dot) given its `path`.
 
   ## Examples
 

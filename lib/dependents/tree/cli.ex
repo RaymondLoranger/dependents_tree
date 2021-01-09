@@ -1,6 +1,7 @@
 defmodule Dependents.Tree.CLI do
   @moduledoc """
-  Parses the command line and prints a `dependents tree` table.
+  Parses the command line and prints a
+  [`dependents tree`](`t:Dependents.Tree.t/0`) table.
   """
 
   use PersistConfig
@@ -17,7 +18,8 @@ defmodule Dependents.Tree.CLI do
   @table_spec get_env(:table_spec)
 
   @doc """
-  Parses the command line and prints a `dependents tree` table.
+  Parses the command line and prints a
+  [`dependents tree`](`t:Dependents.Tree.t/0`) table.
 
   ## Parameters
 

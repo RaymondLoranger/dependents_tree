@@ -1,14 +1,15 @@
 defmodule Dependents.Tree.Proxy do
   @moduledoc """
-  Creates a `dependents tree` of all local apps.
-  Also converts a `dependents tree` into `table_maps`.
+  Creates a [`dependents tree`](`t:Dependents.Tree.t/0`) of all local apps.
+  Also converts a [`dependents tree`](`t:Dependents.Tree.t/0`) into
+  [`table maps`](`t:Dependents.Tree.table_map/0`).
   """
 
   alias Dependents.Tree.DotGraph
   alias Dependents.Tree
 
   @doc """
-  Creates a `dependents tree` of all local apps.
+  Creates a [`dependents tree`](`t:Dependents.Tree.t/0`) of all local apps.
 
   ## Examples
 
@@ -37,7 +38,8 @@ defmodule Dependents.Tree.Proxy do
   end
 
   @doc """
-  Converts a `dependents tree` into `table_maps`.
+  Converts a [`dependents tree`](`t:Dependents.Tree.t/0`) into
+  [`table maps`](`t:Dependents.Tree.table_map/0`).
 
   ## Examples
 

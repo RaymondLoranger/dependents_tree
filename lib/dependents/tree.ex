@@ -1,6 +1,7 @@
 defmodule Dependents.Tree do
   @moduledoc """
-  Converts the `dependents tree` of all or a single `app` into `table_maps`.
+  Converts the [`dependents tree`](`t:Dependents.Tree.t/0`) of all or a single
+  app into table maps.
   """
 
   use PersistConfig
@@ -30,7 +31,8 @@ defmodule Dependents.Tree do
         }
 
   @doc """
-  Converts the `dependents tree` of all or a single `app` into `table_maps`.
+  Converts the [`dependents tree`](`t:Dependents.Tree.t/0`) of all or a single
+  app into [`table maps`](`t:Dependents.Tree.table_map/0`).
   """
   @spec to_maps(:* | app) :: [table_map]
   def to_maps(:*) do
