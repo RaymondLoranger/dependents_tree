@@ -57,7 +57,7 @@ defmodule Dependents.Tree.Proxy do
           dependent_2: :github_issues,
           dependent_3: nil,
           dependent_4: nil,
-          deps: 2, hex: "Y", rank: 27, ver: "1.0.6"
+          deps: 2, hex: "Y", rank: 27, ver: "1.0.7"
         },
         %{
           app: :map_sorter, chunk: 1,
@@ -65,7 +65,7 @@ defmodule Dependents.Tree.Proxy do
           dependent_2: nil,
           dependent_3: nil,
           dependent_4: nil,
-          deps: 1, hex: "Y", rank: 25, ver: "0.2.36"
+          deps: 1, hex: "Y", rank: 25, ver: "0.2.37"
         }
       ]
   """
