@@ -9,31 +9,42 @@ defmodule Dependents.Tree.DotGraph do
   alias Dependents.Tree
 
   @doc ~S"""
-  A DOT graph line links an app to a dependency (`app` -> `dep`).
+  A DOT graph line maps an app to a dependency. For example:
 
-  E.g. `"dependents_tree" -> "io_ansi_table" [label="~> 1.0"]`
+  ```
+  "noaa_observations" -> "log_reset" [label="~> 0.1"]
+  "noaa_observations" -> "io_ansi_table" [label="~> 1.0"]
+  "noaa_observations" -> "persist_config" [label="~> 0.4"]
+  ```
 
-  If `dep` is a dependency of `app` then `app` is dependent on `dep`.
-  Returns a [`dependents tree`](`t:Dependents.Tree.t/0`) having each
-  dependency as a tree app and `folder` as the only tree dep.
+  Converted into a [`dependents tree`](`t:Dependents.Tree.t/0`),
+  the above lines become:
 
-  All tree apps and tree deps must be local apps i.e. project `folders`.
+  ```
+  %{
+    log_reset: [:noaa_observations],
+    io_ansi_table: [:noaa_observations],
+    persist_config: [:noaa_observations]
+  }
+  ```
+
+  Returns such a [`dependents tree`](`t:Dependents.Tree.t/0`) where
+  [`apps`](`t:Dependents.Tree.app/0`) and [`deps`](`t:Dependents.Tree.dep/0`)
+  are local projects (`folder` or in `folders`).
 
   ## Examples
 
       iex> alias Dependents.Tree.DotGraph
       iex> proj_dir = "c:/Users/Ray/Documents/ex_dev/projects"
-      iex> folder = "dependents_tree"
+      iex> folder = "noaa_observations"
       iex> path = "#{proj_dir}/#{folder}/deps_tree.dot"
-      iex> folders = [
-      ...>   "dependents_tree", "io_ansi_table", "io_ansi_plus",
-      ...>   "file_only_logger", "log_reset", "map_sorter", "persist_config"
-      ...> ]
+      iex> folders = ["io_ansi_table", "log_reset", "persist_config"]
       iex> DotGraph.to_tree({path, folder}, folders)
       %{
-        dependents_tree: [],
-        io_ansi_table: [:dependents_tree],
-        persist_config: [:dependents_tree]
+        noaa_observations: [],
+        log_reset: [:noaa_observations],
+        io_ansi_table: [:noaa_observations],
+        persist_config: [:noaa_observations]
       }
   """
   @spec to_tree({Path.t(), folder :: String.t()}, [String.t()]) :: Tree.t()
