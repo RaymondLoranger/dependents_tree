@@ -14,7 +14,7 @@ defmodule Dependents.Tree do
   @type dep :: Application.app()
   @typedoc "Ranks of topologically sorted apps in a dependents tree"
   @type ranks :: %{app => pos_integer}
-  @typedoc "Dependents tree mapping each local app to its local dependents"
+  @typedoc "Dependents tree mapping each app to its dependents"
   @type t :: %{app => [dep]}
   @typedoc "Table map for printing"
   @type table_map :: %{

@@ -9,10 +9,12 @@ defmodule Dependents.Tree.DotGraph do
   alias Dependents.Tree
 
   @doc ~S"""
-  A DOT graph line maps an app to a dependency. For example:
+  A DOT graph line maps an app to a dependency. For example, consider these
+  few lines from DOT graph `.../projects/noaa_observations/deps_tree.dot`:
 
   ```
-  "noaa_observations" -> "log_reset" [label="~> 0.1"]
+  "noaa_observations" -> "ex_doc" [label="~> 0.22"]
+  "ex_doc" -> "earmark_parser" [label="~> 1.4.0"]
   "noaa_observations" -> "io_ansi_table" [label="~> 1.0"]
   "noaa_observations" -> "persist_config" [label="~> 0.4"]
   ```
@@ -22,13 +24,14 @@ defmodule Dependents.Tree.DotGraph do
 
   ```
   %{
-    log_reset: [:noaa_observations],
+    ex_doc: [:noaa_observations],
+    earmark_parser: [:ex_doc],
     io_ansi_table: [:noaa_observations],
     persist_config: [:noaa_observations]
   }
   ```
 
-  Returns such a [`dependents tree`](`t:Dependents.Tree.t/0`) where
+  Returns such a [`dependents tree`](`t:Dependents.Tree.t/0`) but where
   [`apps`](`t:Dependents.Tree.app/0`) and [`deps`](`t:Dependents.Tree.dep/0`)
   are local projects (`folder` or in `folders`).
 
