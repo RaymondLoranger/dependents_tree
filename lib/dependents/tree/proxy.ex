@@ -49,25 +49,27 @@ defmodule Dependents.Tree.Proxy do
       ...>   map_sorter: [:io_ansi_table]
       ...> }
       iex> ranks = %{io_ansi_table: 27, map_sorter: 25}
-      iex> Proxy.to_maps(tree, ranks)
-      [
-        %{
-          app: :io_ansi_table, chunk: 1,
-          dependent_1: :noaa_observations,
-          dependent_2: :github_issues,
-          dependent_3: nil,
-          dependent_4: nil,
-          deps: 2, hex: "Y", rank: 27, ver: "1.0.7"
-        },
-        %{
-          app: :map_sorter, chunk: 1,
-          dependent_1: :io_ansi_table,
-          dependent_2: nil,
-          dependent_3: nil,
-          dependent_4: nil,
-          deps: 1, hex: "Y", rank: 25, ver: "0.2.37"
-        }
-      ]
+      iex> maps = Proxy.to_maps(tree, ranks)
+      iex> [
+      ...>   %{
+      ...>     app: :io_ansi_table, chunk: 1,
+      ...>     dependent_1: :noaa_observations,
+      ...>     dependent_2: :github_issues,
+      ...>     dependent_3: nil,
+      ...>     dependent_4: nil,
+      ...>     deps: 2, hex: "Y", rank: 27, ver: ver_27
+      ...>   },
+      ...>   %{
+      ...>     app: :map_sorter, chunk: 1,
+      ...>     dependent_1: :io_ansi_table,
+      ...>     dependent_2: nil,
+      ...>     dependent_3: nil,
+      ...>     dependent_4: nil,
+      ...>     deps: 1, hex: "Y", rank: 25, ver: ver_25
+      ...>   }
+      ...> ] = maps
+      iex> is_binary(ver_27) and is_binary(ver_25)
+      true
   """
   @spec to_maps(Tree.t(), Tree.ranks()) :: [Tree.table_map()]
   def to_maps(tree, ranks) do
