@@ -25,7 +25,7 @@ defmodule Dependents.Tree.CLI do
 
     - `argv` - command line arguments (list)
   """
-  @spec main([String.t()]) :: :ok | no_return
+  @spec main(OptionParser.argv()) :: :ok | no_return
   def main(argv) do
     case parse(argv) do
       {app} ->
@@ -92,7 +92,7 @@ defmodule Dependents.Tree.CLI do
   #     iex> CLI.parse(["file only logger"])
   #     {:"file only logger"}
   # """
-  @spec parse([String.t()]) :: parsed
+  @spec parse(OptionParser.argv()) :: parsed
   defp parse(argv) do
     argv
     |> OptionParser.parse(strict: @strict, aliases: @aliases)
@@ -132,7 +132,9 @@ defmodule Dependents.Tree.CLI do
   #     iex> CLI.to_parsed({[], ["file only logger"], []})
   #     {:"file only logger"}
   # """
-  @spec to_parsed({Keyword.t(), [String.t()], [tuple]}) :: parsed
+  @spec to_parsed(
+          {OptionParser.parsed(), OptionParser.argv(), OptionParser.errors()}
+        ) :: parsed
   defp to_parsed({switches, args, []}) do
     with {app} <- to_tuple(args),
          %{help: false, all: false} <-
@@ -171,7 +173,7 @@ defmodule Dependents.Tree.CLI do
   #     iex> CLI.to_tuple([:all])
   #     :error
   # """
-  @spec to_tuple([String.t()]) :: {Tree.app()} | :error
+  @spec to_tuple(OptionParser.argv()) :: {Tree.app()} | :error
   defp to_tuple([] = _args) do
     {Path.expand(".") |> Path.basename() |> String.to_atom()}
   end
