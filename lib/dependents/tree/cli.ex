@@ -1,7 +1,6 @@
 defmodule Dependents.Tree.CLI do
   @moduledoc """
-  Parses the command line and prints a
-  [`dependents tree`](`t:Dependents.Tree.t/0`) table.
+  Parses the command line and prints a `Dependents.Tree` table.
   """
 
   use PersistConfig
@@ -18,8 +17,7 @@ defmodule Dependents.Tree.CLI do
   @table_spec get_env(:table_spec)
 
   @doc """
-  Parses the command line and prints a
-  [`dependents tree`](`t:Dependents.Tree.t/0`) table.
+  Parses the command line and prints a `Dependents.Tree` table.
 
   ## Parameters
 
@@ -30,11 +28,11 @@ defmodule Dependents.Tree.CLI do
     case parse(argv) do
       {app} ->
         if project?(app),
-          do: Tree.to_maps(app) |> Table.write(@table_spec),
+          do: Table.write(@table_spec, Tree.to_maps(app)),
           else: Help.show_help()
 
       :all ->
-        Tree.to_maps(:*) |> Table.write(@table_spec)
+        Table.write(@table_spec, Tree.to_maps(:*))
 
       :help ->
         Help.show_help()
@@ -44,7 +42,9 @@ defmodule Dependents.Tree.CLI do
   ## Private functions
 
   @spec project?(Tree.app()) :: boolean
-  defp project?(app), do: File.exists?("#{Tree.project_dir()}/#{app}/mix.exs")
+  defp project?(app) do
+    File.exists?("#{Tree.project_dir()}/#{app}/mix.exs")
+  end
 
   # @doc """
   # Parses `argv` (command line arguments).
