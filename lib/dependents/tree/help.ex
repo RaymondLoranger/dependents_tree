@@ -1,41 +1,39 @@
 defmodule Dependents.Tree.Help do
+  @moduledoc """
+  Prints info on the escript command's usage and syntax.
+  """
+
   use PersistConfig
 
   @escript Mix.Project.config()[:escript][:name]
   @help_attrs get_env(:help_attrs)
 
-  @spec show_help() :: no_return
+  @doc """
+  Prints info on the escript command's usage and syntax.
+  """
+  @spec show_help() :: :ok
   def show_help() do
-    # Examples of usage on Windows:
-    #   escript deps_tree --help
-    #   escript deps_tree file_only_logger
-    #   escript deps_tree
-    #   escript deps_tree --all
-    # Examples of usage on macOS:
-    #   ./deps_tree -a
-    {types, texts} =
-      case :os.type() do
-        {:win32, _} ->
-          {[:section, :normal, :command, :normal],
-           ["usage:", " ", "escript", " #{@escript}"]}
-
-        {:unix, _} ->
-          {[:section, :normal], ["usage:", " ./#{@escript}"]}
-      end
-
-    filler = String.duplicate(" ", Enum.join(texts) |> String.length())
-    prefix = help_format(types, texts)
+    # Examples of usage:
+    #   deps_tree --help
+    #   deps_tree file_only_logger
+    #   deps_tree
+    #   deps_tree .
+    #   deps_tree --all
+    #   deps_tree -a
+    texts = ["usage:", " #{@escript}"]
+    filler = String.pad_leading("", Enum.join(texts) |> String.length())
+    prefix = help_format([:section, :normal], texts)
     item_help = help_format([:switch], ["[(-h | --help)]"])
     item_all = help_format([:switch], ["[(-a | --all)]"])
-    item_app = help_format([:arg], ["<app>"])
+    item_app = help_format([:arg], ["<dir>"])
     item_where = help_format([:section], ["where:"])
 
     item_default_app =
       help_format([:normal, :arg, :normal, :value], [
         "  - default ",
-        "<app>",
+        "<dir>",
         " is ",
-        "the current app (folder)"
+        "the current (app) directory"
       ])
 
     IO.write("""
@@ -45,8 +43,6 @@ defmodule Dependents.Tree.Help do
     #{item_where}
     #{item_default_app}
     """)
-
-    System.stop(0)
   end
 
   ## Private functions

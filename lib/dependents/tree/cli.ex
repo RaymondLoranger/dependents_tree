@@ -9,11 +9,7 @@ defmodule Dependents.Tree.CLI do
   alias Dependents.Tree
   alias IO.ANSI.Table
 
-  @type parsed :: {Tree.app()} | :all | :help
-
-  @aliases get_env(:aliases)
-  @strict get_env(:strict)
-  @switches get_env(:default_switches)
+  @options get_env(:parsing_options)
   @table_spec get_env(:table_spec)
 
   @doc """
@@ -23,161 +19,43 @@ defmodule Dependents.Tree.CLI do
 
     - `argv` - command line arguments (list)
   """
-  @spec main(OptionParser.argv()) :: :ok | no_return
+  @spec main(OptionParser.argv()) :: :ok
   def main(argv) do
-    case parse(argv) do
-      {app} ->
-        if project?(app),
-          do: Table.write(@table_spec, Tree.to_maps(app)),
-          else: Help.show_help()
-
-      :all ->
-        Table.write(@table_spec, Tree.to_maps(:*))
-
-      :help ->
-        Help.show_help()
+    case OptionParser.parse(argv, @options) do
+      {[all: true], [], []} -> Table.write(@table_spec, Tree.to_maps(:*))
+      {[help: true], [], []} -> Help.show_help()
+      {[], [dir], []} -> maybe_write_table(dir)
+      {[], [], []} -> maybe_write_table(".")
+      _else -> Help.show_help()
     end
   end
 
   ## Private functions
 
+  @spec maybe_write_table(Path.t()) :: :ok
+  defp maybe_write_table(dir) do
+    app =
+      dir
+      # In case of any trailing separator(s) for example...
+      |> Path.basename()
+      |> Path.expand()
+      |> Path.basename()
+      |> String.to_atom()
+
+    maybe_write_table(app, project?(app))
+  end
+
+  @spec maybe_write_table(Tree.app(), boolean) :: :ok
+  defp maybe_write_table(app, _project? = true) do
+    Table.write(@table_spec, Tree.to_maps(app))
+  end
+
+  defp maybe_write_table(_app, false) do
+    Help.show_help()
+  end
+
   @spec project?(Tree.app()) :: boolean
   defp project?(app) do
     File.exists?("#{Tree.project_dir()}/#{app}/mix.exs")
   end
-
-  # @doc """
-  # Parses `argv` (command line arguments).
-
-  # `argv` can be "-h" or "--help", which returns :help.
-  # Otherwise it may contain an app (folder) or `--all`.
-  # If no app is given, the current app (folder) is assumed.
-
-  # ## Parameters
-
-  #   - `argv` - command line arguments (list)
-
-  # ## Switches
-
-  #   - `-h` or `--help` - for help
-  #   - `-a` or `--all`  - to print the dependents tree of all apps
-
-  # ## Examples
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.parse(["--all"])
-  #     :all
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.parse(["-a", "file_only_logger"])
-  #     :all
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.parse(["-h"])
-  #     :help
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.parse(["-h", "file_only_logger"])
-  #     :help
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.parse([])
-  #     {:dependents_tree}
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.parse(["file_only_logger"])
-  #     {:file_only_logger}
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.parse(["file only logger"])
-  #     {:"file only logger"}
-  # """
-  @spec parse(OptionParser.argv()) :: parsed
-  defp parse(argv) do
-    argv
-    |> OptionParser.parse(strict: @strict, aliases: @aliases)
-    |> to_parsed()
-  end
-
-  # @doc """
-  # Converts the output of `OptionParser.parse/2` into `parsed`.
-
-  # ## Examples
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.to_parsed({[all: true], [], []})
-  #     :all
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.to_parsed({[all: true], ["file_only_logger"], []})
-  #     :all
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.to_parsed({[help: true], [], []})
-  #     :help
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.to_parsed({[help: true], ["file_only_logger"], []})
-  #     :help
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.to_parsed({[], [], []})
-  #     {:dependents_tree}
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.to_parsed({[], ["file_only_logger"], []})
-  #     {:file_only_logger}
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.to_parsed({[], ["file only logger"], []})
-  #     {:"file only logger"}
-  # """
-  @spec to_parsed(
-          {OptionParser.parsed(), OptionParser.argv(), OptionParser.errors()}
-        ) :: parsed
-  defp to_parsed({switches, args, []}) do
-    with {app} <- to_tuple(args),
-         %{help: false, all: false} <-
-           Map.merge(Map.new(@switches), Map.new(switches)) do
-      {app}
-    else
-      %{help: false, all: true} -> :all
-      _ -> :help
-    end
-  end
-
-  defp to_parsed(_), do: :help
-
-  # @doc """
-  # Converts `args` into a tuple or `:error`.
-
-  # ## Examples
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.to_tuple([])
-  #     {:dependents_tree}
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.to_tuple(["file_only_logger"])
-  #     {:file_only_logger}
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.to_tuple(["file only logger"])
-  #     {:"file only logger"}
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.to_tuple(["?"])
-  #     {:"?"}
-
-  #     iex> alias Dependents.Tree.CLI
-  #     iex> CLI.to_tuple([:all])
-  #     :error
-  # """
-  @spec to_tuple(OptionParser.argv()) :: {Tree.app()} | :error
-  defp to_tuple([] = _args) do
-    {Path.expand(".") |> Path.basename() |> String.to_atom()}
-  end
-
-  defp to_tuple([app] = _args) when is_binary(app), do: {String.to_atom(app)}
-  defp to_tuple(_), do: :error
 end

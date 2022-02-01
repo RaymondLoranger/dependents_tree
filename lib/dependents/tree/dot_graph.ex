@@ -2,7 +2,7 @@ defmodule Dependents.Tree.DotGraph do
   @moduledoc """
   Converts a DOT graph (deps_tree.dot) into a
   [`dependents tree`](`t:Dependents.Tree.t/0`).
-  Also returns the folder of a DOT graph given its path.
+  Also returns the directory of a DOT graph given its path.
 
   """
 
@@ -33,16 +33,16 @@ defmodule Dependents.Tree.DotGraph do
 
   Returns such a [`dependents tree`](`t:Dependents.Tree.t/0`) but where
   [`apps`](`t:Dependents.Tree.app/0`) and [`deps`](`t:Dependents.Tree.dep/0`)
-  are local projects (`folder` or in `folders`).
+  are local projects (`dir` or in `dirs`).
 
   ## Examples
 
       iex> alias Dependents.Tree.DotGraph
       iex> proj_dir = "c:/Users/Ray/Documents/ex_dev/projects"
-      iex> folder = "noaa_observations"
-      iex> path = "#{proj_dir}/#{folder}/deps_tree.dot"
-      iex> folders = ["io_ansi_table", "log_reset", "persist_config"]
-      iex> DotGraph.to_tree({path, folder}, folders)
+      iex> dir = "noaa_observations"
+      iex> path = "#{proj_dir}/#{dir}/deps_tree.dot"
+      iex> dirs = ["io_ansi_table", "log_reset", "persist_config"]
+      iex> DotGraph.to_tree({path, dir}, dirs)
       %{
         noaa_observations: [],
         log_reset: [:noaa_observations],
@@ -50,23 +50,23 @@ defmodule Dependents.Tree.DotGraph do
         persist_config: [:noaa_observations]
       }
   """
-  @spec to_tree({Path.t(), folder :: String.t()}, [String.t()]) :: Tree.t()
-  def to_tree({path, folder} = _path_and_folder, folders) do
+  @spec to_tree({Path.t(), dir :: String.t()}, [String.t()]) :: Tree.t()
+  def to_tree({path, dir} = _path_and_dir, dirs) do
     for line <- File.stream!(path), into: %{} do
       with [app, dep] <- String.split(line, "->") |> Enum.map(&String.trim/1),
            [_full, app] <- Regex.run(~r|^"(\w+)"$|, app),
-           true <- app == folder,
+           true <- app == dir,
            [_full, dep] <- Regex.run(~r|^"(\w+)" \[.+\]$|, dep),
-           true <- dep in folders do
-        {String.to_atom(dep), [String.to_atom(folder)]}
+           true <- dep in dirs do
+        {String.to_atom(dep), [String.to_atom(dir)]}
       else
-        _non_matched -> {String.to_atom(folder), []}
+        _non_matched -> {String.to_atom(dir), []}
       end
     end
   end
 
   @doc ~S"""
-  Returns the folder of a DOT graph (deps_tree.dot) given its `path`.
+  Returns the dir of a DOT graph (deps_tree.dot) given its `path`.
 
   ## Examples
 
@@ -74,14 +74,14 @@ defmodule Dependents.Tree.DotGraph do
       iex> proj_dir = "c:/Users/Ray/Documents/ex_dev/projects"
       iex> path1 = "#{proj_dir}/file_only_logger/deps_tree.dot"
       iex> path2 = "#{proj_dir}/file only logger/deps_tree.dot"
-      iex> {DotGraph.folder(path1), DotGraph.folder(path2)}
+      iex> {DotGraph.dir(path1), DotGraph.dir(path2)}
       {"file_only_logger", nil}
   """
-  @spec folder(Path.t()) :: String.t() | nil
-  def folder(path) do
+  @spec dir(Path.t()) :: String.t() | nil
+  def dir(path) do
     case Regex.run(~r|^.+/(\w+)/deps_tree.dot$|, path) do
-      [_full, folder] -> folder
-      # folder may contain spaces (not \w)
+      [_full, dir] -> dir
+      # dir may contain spaces (not \w)
       nil -> nil
     end
   end

@@ -22,11 +22,11 @@ defmodule Dependents.Tree.Proxy do
   @spec new :: Tree.t()
   def new do
     paths = Path.wildcard("#{Tree.project_dir()}/*/deps_tree.dot")
-    folders = Enum.map(paths, &DotGraph.folder/1)
+    dirs = Enum.map(paths, &DotGraph.dir/1)
 
-    Enum.zip(paths, folders)
-    |> Enum.reject(fn {_path, folder} -> is_nil(folder) end)
-    |> Enum.map(&Task.async(DotGraph, :to_tree, [&1, folders]))
+    Enum.zip(paths, dirs)
+    |> Enum.reject(fn {_path, dir} -> is_nil(dir) end)
+    |> Enum.map(&Task.async(DotGraph, :to_tree, [&1, dirs]))
     |> Enum.map(&Task.await/1)
     |> Enum.reduce(%{}, fn tree, acc_tree ->
       Map.merge(acc_tree, tree, fn

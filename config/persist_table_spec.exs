@@ -17,7 +17,7 @@ headers = [
 
 options = [
   align_specs: [center: :hex],
-  bell: true,
+  bell: false,
   count: 999,
   header_fixes: %{~r/^hex$/i => "Hex?"},
   sort_specs: [:rank, :chunk, :app],
