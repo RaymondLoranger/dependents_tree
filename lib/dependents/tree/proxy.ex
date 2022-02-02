@@ -9,9 +9,9 @@ defmodule Dependents.Tree.Proxy do
 
   @doc """
   Creates a `Dependents.Tree` of all local apps.
-
+  
   ## Examples
-
+  
       iex> alias Dependents.Tree.Proxy
       iex> tree = Proxy.new()
       iex> %{log_reset: [n1 | deps1], io_ansi_table: [n2 | deps2]} = tree
@@ -39,9 +39,9 @@ defmodule Dependents.Tree.Proxy do
 
   @doc """
   Converts a `Dependents.Tree` into table maps.
-
+  
   ## Examples
-
+  
       iex> alias Dependents.Tree.Proxy
       iex> tree = %{
       ...>   io_ansi_table: [3, :noaa_observations, :github_issues],

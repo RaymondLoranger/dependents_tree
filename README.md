@@ -1,8 +1,9 @@
 # Dependents Tree
 
-Writes local apps to "stdio" after sorting them topologically.
+Writes local apps to "stdio" after ordering them topologically.
 
-Change management app topologically listing interdependent apps residing in a local project directory set by environment variable `PROJEX_DIR`.
+Change management app topologically listing local apps residing
+in a project directory set by environment variable `PROJEX_DIR`.
 
 Only projects containing file `deps_tree.dot` will be considered.
 To generate the DOT graph file, run `mix deps.tree --format dot`.
@@ -10,7 +11,9 @@ Each project's root directory must match the app name it contains.
 For instance, dir `dependents_tree` for app `:dependents_tree`.
 Does not support umbrella projects.
 
-Allows to update local interdependent apps in a proper topological order.
+Allows to update local interdependent apps in a topological order.
+In other words, if a given app changes, what other dependent apps
+become outdated and in what order must they be updated themselves.
 
 ## Usage
 

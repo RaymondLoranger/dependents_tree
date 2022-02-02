@@ -14,9 +14,9 @@ defmodule Dependents.Tree.CLI do
 
   @doc """
   Parses the command line and prints a `Dependents.Tree` table.
-
+  
   ## Parameters
-
+  
     - `argv` - command line arguments (list)
   """
   @spec main(OptionParser.argv()) :: :ok

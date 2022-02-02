@@ -3,7 +3,7 @@ defmodule Dependents.Tree.Digraph do
   In a diagram of a graph, a vertex is usually represented by a circle with a
   label, and an edge is represented by an arrow extending from one vertex to
   another.
-
+  
   Here vertices are apps and edges are arrows extending from an app to its
   dependents.
   """
@@ -47,7 +47,7 @@ defmodule Dependents.Tree.Digraph do
 
   @doc """
   Returns a recursive list of the out-neighbors of `app`.
-
+  
   If an edge is emanating from v and incident on w, then w is said to be an
   out-neighbor of v, and v is said to be an in-neighbor of w.
   """
