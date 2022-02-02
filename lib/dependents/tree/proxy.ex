@@ -21,7 +21,7 @@ defmodule Dependents.Tree.Proxy do
   """
   @spec new :: Tree.t()
   def new do
-    paths = Path.wildcard("#{Tree.project_dir()}/*/deps_tree.dot")
+    paths = Path.wildcard("#{Tree.projects_dir()}/*/deps_tree.dot")
     dirs = Enum.map(paths, &DotGraph.dir/1)
 
     Enum.zip(paths, dirs)
@@ -110,7 +110,7 @@ defmodule Dependents.Tree.Proxy do
   end
 
   @spec mix_text(Tree.app()) :: String.t()
-  defp mix_text(app), do: File.read!("#{Tree.project_dir()}/#{app}/mix.exs")
+  defp mix_text(app), do: File.read!("#{Tree.projects_dir()}/#{app}/mix.exs")
 
   @spec chunk_deps([Tree.dep()]) :: [[Tree.dep() | nil]]
   defp chunk_deps([]), do: [[nil, nil, nil, nil]]

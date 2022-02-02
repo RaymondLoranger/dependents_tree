@@ -3,7 +3,7 @@
 Writes local apps to "stdio" after ordering them topologically.
 
 Change management app topologically listing local apps residing
-in a project directory set by environment variable `PROJEX_DIR`.
+in a projects directory set by environment variable `PROJEX_DIR`.
 
 Only projects containing file `deps_tree.dot` will be considered.
 To generate the DOT graph file, run `mix deps.tree --format dot`.

@@ -33,9 +33,9 @@ defmodule Dependents.Tree.DotGraph do
   ## Examples
   
       iex> alias Dependents.Tree.DotGraph
-      iex> proj_dir = "c:/Users/Ray/Documents/ex_dev/projects"
+      iex> projs_dir = "c:/Users/Ray/Documents/ex_dev/projects"
       iex> dir = "noaa_observations"
-      iex> path = "#{proj_dir}/#{dir}/deps_tree.dot"
+      iex> path = "#{projs_dir}/#{dir}/deps_tree.dot"
       iex> dirs = ["io_ansi_table", "log_reset", "persist_config", dir]
       iex> DotGraph.to_tree({path, dir}, dirs)
       %{
@@ -70,9 +70,9 @@ defmodule Dependents.Tree.DotGraph do
   ## Examples
   
       iex> alias Dependents.Tree.DotGraph
-      iex> proj_dir = "c:/Users/Ray/Documents/ex_dev/projects"
-      iex> path1 = "#{proj_dir}/file_only_logger/deps_tree.dot"
-      iex> path2 = "#{proj_dir}/file only logger/deps_tree.dot"
+      iex> projs_dir = "c:/Users/Ray/Documents/ex_dev/projects"
+      iex> path1 = "#{projs_dir}/file_only_logger/deps_tree.dot"
+      iex> path2 = "#{projs_dir}/file only logger/deps_tree.dot"
       iex> {DotGraph.dir(path1), DotGraph.dir(path2)}
       {"file_only_logger", nil}
   """

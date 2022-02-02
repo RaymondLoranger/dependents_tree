@@ -14,9 +14,9 @@ defmodule Dependents.Tree.CLI do
 
   @doc """
   Parses the command line and prints a `Dependents.Tree` table.
-  
+
   ## Parameters
-  
+
     - `argv` - command line arguments (list)
   """
   @spec main(OptionParser.argv()) :: :ok
@@ -56,6 +56,6 @@ defmodule Dependents.Tree.CLI do
 
   @spec project?(Tree.app()) :: boolean
   defp project?(app) do
-    File.exists?("#{Tree.project_dir()}/#{app}/mix.exs")
+    File.exists?("#{Tree.projects_dir()}/#{app}/mix.exs")
   end
 end
