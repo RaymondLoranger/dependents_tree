@@ -9,9 +9,9 @@ defmodule Dependents.Tree.Proxy do
 
   @doc """
   Creates a `Dependents.Tree` of all local apps.
-  
+
   ## Examples
-  
+
       iex> alias Dependents.Tree.Proxy
       iex> tree = Proxy.new()
       iex> %{log_reset: [n1 | deps1], io_ansi_table: [n2 | deps2]} = tree
@@ -39,9 +39,9 @@ defmodule Dependents.Tree.Proxy do
 
   @doc """
   Converts a `Dependents.Tree` into table maps.
-  
+
   ## Examples
-  
+
       iex> alias Dependents.Tree.Proxy
       iex> tree = %{
       ...>   io_ansi_table: [3, :noaa_observations, :github_issues],
@@ -97,7 +97,7 @@ defmodule Dependents.Tree.Proxy do
   ## Private functions
 
   @spec ver(Tree.app()) :: String.t()
-  def ver(app) do
+  defp ver(app) do
     [_full, major, minor, patch] =
       Regex.run(~r|version: "(\d+)\.(\d+)\.(\d+)"|, mix_text(app))
 
@@ -105,7 +105,7 @@ defmodule Dependents.Tree.Proxy do
   end
 
   @spec hex?(Tree.app()) :: boolean
-  def hex?(app) do
+  defp hex?(app) do
     !!Regex.run(~r|package: \w+|, mix_text(app))
   end
 
