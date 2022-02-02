@@ -1,28 +1,38 @@
 defmodule Dependents.Tree do
   @moduledoc """
   Converts the `Dependents.Tree` of all or a single app into table maps.
+
+  The dependencies of an app are specified in the `mix.exs` file.
+  _Dependents_ of an app are those apps using it as a dependency.
   """
 
   use PersistConfig
 
   alias __MODULE__.{Digraph, Proxy}
 
-  @typedoc "Application"
+  @typedoc "Local app"
   @type app :: Application.app()
-  @typedoc "Dependent (not dependency)"
+  @typedoc "Number of local dependencies"
+  @type dcys :: non_neg_integer
+  @typedoc "Local dependent"
   @type dep :: Application.app()
-  @typedoc "Ranks of topologically sorted apps in a dependents tree"
-  @type ranks :: %{app => pos_integer}
-  @typedoc "Dependents tree mapping each app to its dependents"
-  @type t :: %{app => [dep]}
+  @typedoc "Number of local dependents"
+  @type deps :: non_neg_integer
+  @typedoc "Topological rank"
+  @type rank :: pos_integer
+  @typedoc "Ranks of topologically ordered apps"
+  @type ranks :: %{app => rank}
+  @typedoc "Tree mapping local apps to local dependents"
+  @type t :: %{app => [dcys | dep]}
   @typedoc "Table map for printing"
   @type table_map :: %{
-          rank: pos_integer,
+          rank: rank,
           chunk: pos_integer,
           ver: String.t() | nil,
           hex: String.t() | nil,
           app: app | nil,
-          deps: non_neg_integer | nil,
+          dcys: dcys | nil,
+          deps: deps | nil,
           dependent_1: dep | nil,
           dependent_2: dep | nil,
           dependent_3: dep | nil,
@@ -30,7 +40,7 @@ defmodule Dependents.Tree do
         }
 
   @doc """
-  Converts the `Dependents.Tree` of all or a single app into `table maps`.
+  Converts the `Dependents.Tree` of all or a single app into table maps.
   """
   @spec to_maps(:* | app) :: [table_map]
   def to_maps(:*) do
@@ -44,7 +54,7 @@ defmodule Dependents.Tree do
     tree = new()
     digraph = Digraph.from_tree(tree)
     ranks = Digraph.ranks(digraph)
-    deps = Digraph.dependents(app, digraph)
+    deps = Digraph.dependents(digraph, app)
     Map.take(tree, [app | deps]) |> to_maps(ranks)
   end
 

@@ -8,6 +8,7 @@ headers = [
   :ver,
   :hex,
   :app,
+  :dcys,
   :deps,
   :dependent_1,
   :dependent_2,
@@ -16,7 +17,13 @@ headers = [
 ]
 
 options = [
-  align_specs: [center: :hex],
+  align_specs: [
+    right: :rank,
+    center: :chunk,
+    center: :hex,
+    right: :dcys,
+    right: :deps
+  ],
   bell: false,
   count: 999,
   header_fixes: %{~r/^hex$/i => "Hex?"},

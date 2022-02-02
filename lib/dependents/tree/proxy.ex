@@ -1,22 +1,22 @@
 defmodule Dependents.Tree.Proxy do
   @moduledoc """
-  Creates a [`dependents tree`](`t:Dependents.Tree.t/0`) of all local apps.
-  Also converts a [`dependents tree`](`t:Dependents.Tree.t/0`) into
-  [`table maps`](`t:Dependents.Tree.table_map/0`).
+  Creates a `Dependents.Tree` of all local apps.
+  Also converts a `Dependents.Tree` into table maps.
   """
 
   alias Dependents.Tree.DotGraph
   alias Dependents.Tree
 
   @doc """
-  Creates a [`dependents tree`](`t:Dependents.Tree.t/0`) of all local apps.
+  Creates a `Dependents.Tree` of all local apps.
 
   ## Examples
 
       iex> alias Dependents.Tree.Proxy
       iex> tree = Proxy.new()
-      iex> %{file_only_logger: deps1, io_ansi_table: deps2} = tree
-      iex> Enum.all?(deps1, &is_atom/1) and Enum.all?(deps2, &is_atom/1)
+      iex> %{log_reset: [n1 | deps1], io_ansi_table: [n2 | deps2]} = tree
+      iex> Enum.all?(deps1, &is_atom/1) and Enum.all?(deps2, &is_atom/1) and
+      ...> is_integer(n1) and is_integer(n2)
       true
   """
   @spec new :: Tree.t()
@@ -30,23 +30,22 @@ defmodule Dependents.Tree.Proxy do
     |> Enum.map(&Task.await/1)
     |> Enum.reduce(%{}, fn tree, acc_tree ->
       Map.merge(acc_tree, tree, fn
-        _app, deps, [] -> deps
         _app, deps, [dep] -> [dep | deps]
       end)
     end)
+    # Number of dependencies will be first element...
     |> Map.new(fn {app, deps} -> {app, Enum.sort(deps)} end)
   end
 
   @doc """
-  Converts a [`dependents tree`](`t:Dependents.Tree.t/0`) into
-  [`table maps`](`t:Dependents.Tree.table_map/0`).
+  Converts a `Dependents.Tree` into table maps.
 
   ## Examples
 
       iex> alias Dependents.Tree.Proxy
       iex> tree = %{
-      ...>   io_ansi_table: [:noaa_observations, :github_issues],
-      ...>   map_sorter: [:io_ansi_table]
+      ...>   io_ansi_table: [3, :noaa_observations, :github_issues],
+      ...>   map_sorter: [4, :io_ansi_table]
       ...> }
       iex> ranks = %{io_ansi_table: 27, map_sorter: 25}
       iex> maps = Proxy.to_maps(tree, ranks)
@@ -57,7 +56,7 @@ defmodule Dependents.Tree.Proxy do
       ...>     dependent_2: :github_issues,
       ...>     dependent_3: nil,
       ...>     dependent_4: nil,
-      ...>     deps: 2, hex: "Y", rank: 27, ver: ver_27
+      ...>     dcys: 3, deps: 2, hex: "Y", rank: 27, ver: ver_27
       ...>   },
       ...>   %{
       ...>     app: :map_sorter, chunk: 1,
@@ -65,7 +64,7 @@ defmodule Dependents.Tree.Proxy do
       ...>     dependent_2: nil,
       ...>     dependent_3: nil,
       ...>     dependent_4: nil,
-      ...>     deps: 1, hex: "Y", rank: 25, ver: ver_25
+      ...>     dcys: 4, deps: 1, hex: "Y", rank: 25, ver: ver_25
       ...>   }
       ...> ] = maps
       iex> is_binary(ver_27) and is_binary(ver_25)
@@ -73,7 +72,7 @@ defmodule Dependents.Tree.Proxy do
   """
   @spec to_maps(Tree.t(), Tree.ranks()) :: [Tree.table_map()]
   def to_maps(tree, ranks) do
-    for {app, deps} <- tree do
+    for {app, [dcys | deps]} <- tree do
       chunk_deps(deps)
       |> Enum.with_index(1)
       |> Enum.map(fn {[dep1, dep2, dep3, dep4], index} ->
@@ -82,8 +81,9 @@ defmodule Dependents.Tree.Proxy do
           chunk: index,
           ver: ver(app) |> zap_dup(index),
           hex: hex?(app) |> zap_dup(index),
-          app: zap_dup(app, index),
+          dcys: zap_dup(dcys, index),
           deps: length(deps) |> zap_dup(index),
+          app: zap_dup(app, index),
           dependent_1: dep1,
           dependent_2: dep2,
           dependent_3: dep3,
@@ -106,7 +106,7 @@ defmodule Dependents.Tree.Proxy do
 
   @spec hex?(Tree.app()) :: boolean
   def hex?(app) do
-    (Regex.run(~r|package: \w+|, mix_text(app)) && true) || false
+    !!Regex.run(~r|package: \w+|, mix_text(app))
   end
 
   @spec mix_text(Tree.app()) :: String.t()

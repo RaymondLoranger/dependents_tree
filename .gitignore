@@ -23,3 +23,4 @@ erl_crash.dump
 dependents_tree-*.tar
 
 deps_tree
+deps_tree*.txt
