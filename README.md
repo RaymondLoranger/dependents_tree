@@ -19,7 +19,7 @@ become outdated and in what order must they be updated themselves.
 
 To use `Dependents Tree` locally, run these commands:
 
-  - `set PROJEX_DIR="<elixir_projects_dir>"`
+  - `set PROJEX_DIR=elixir_projects_dir`
   - `git clone https://github.com/RaymondLoranger/dependents_tree`
   - `cd dependents_tree`
   - `mix deps.get`
