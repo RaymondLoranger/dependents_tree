@@ -8,7 +8,7 @@ and environment variable `PROJEX_DIR` should be set to it.
 Only projects containing file `deps_tree.dot` (created by
 `mix deps.tree --format dot`) will be considered.
 Each project's root directory must match its underlying app name.
-For instance, dir `dependents_tree` for app `:dependents_tree`.
+For instance, directory `dependents_tree` for app `:dependents_tree`.
 Does not support umbrella projects.
 
 Allows to update local interdependent apps in a topological order.
