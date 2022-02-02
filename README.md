@@ -21,7 +21,7 @@ To use `Dependents Tree` locally, run these commands:
 
   - `set PROJEX_DIR="<elixir_project_dir>"`
   - `git clone https://github.com/RaymondLoranger/dependents_tree`
-  - `cd dependent_tree`
+  - `cd dependents_tree`
   - `mix deps.get`
   - `mix escript.build`
   - `mix escript.install`
