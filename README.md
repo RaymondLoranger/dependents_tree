@@ -5,8 +5,8 @@ Writes local apps to "stdio" after ordering them topologically.
 These local apps should be under some _projects directory_
 and environment variable `PROJEX_DIR` should be set to it.
 
-Only projects containing file `deps_tree.dot` will be considered.
-To generate the DOT graph file, run `mix deps.tree --format dot`.
+Only projects containing file `deps_tree.dot` (created by
+`mix deps.tree --format dot`) will be considered.
 Each project's root directory must match its underlying app name.
 For instance, dir `dependents_tree` for app `:dependents_tree`.
 Does not support umbrella projects.
