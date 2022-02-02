@@ -13,7 +13,7 @@ Does not support umbrella projects.
 
 Allows to update local interdependent apps in a topological order.
 In other words, if a given app changes, what other dependent apps
-become outdated and in what order must they be updated themselves.
+become outdated and in what order should they be updated themselves.
 
 ## Usage
 
