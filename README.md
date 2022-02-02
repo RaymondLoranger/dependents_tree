@@ -7,7 +7,7 @@ and environment variable `PROJEX_DIR` should be set to it.
 
 Only projects containing file `deps_tree.dot` will be considered.
 To generate the DOT graph file, run `mix deps.tree --format dot`.
-Each project's root directory must match the app name it contains.
+Each project's root directory must match its underlying app name.
 For instance, dir `dependents_tree` for app `:dependents_tree`.
 Does not support umbrella projects.
 
