@@ -4,7 +4,7 @@ defmodule Dependents.Tree.MixProject do
   def project do
     [
       app: :dependents_tree,
-      version: "0.1.22",
+      version: "0.1.23",
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       name: "Dependents Tree",
@@ -24,7 +24,7 @@ defmodule Dependents.Tree.MixProject do
 
   defp description do
     """
-    Writes local apps to "stdio" after ordering them topologically.
+    Writes a list of local apps to "stdio" after ordering them topologically.
     """
   end
 
