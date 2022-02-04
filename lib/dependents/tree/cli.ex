@@ -15,9 +15,22 @@ defmodule Dependents.Tree.CLI do
   @doc """
   Parses the command line and prints a `Dependents.Tree` table.
 
+  The dependencies of an app are specified in the `mix.exs` file.
+  _Dependents_ of an app are those apps using it as a dependency.
+
+  `argv` can be "-h" or "--help", which prints info on the command's
+  usage and syntax. Otherwise it contains an apps's directory to
+  list all direct and indirect _dependents_ of that app.
+  To list dependents of all apps, specify switch `--all`.
+
   ## Parameters
 
     - `argv` - command line arguments (list)
+
+  ## Switches
+
+    - `-h` or `--help` - for help
+    - `-a` or `--all`  - to list dependents of all apps
   """
   @spec main(OptionParser.argv()) :: :ok
   def main(argv) do

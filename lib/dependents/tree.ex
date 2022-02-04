@@ -64,6 +64,9 @@ defmodule Dependents.Tree do
   @spec to_maps(t, ranks) :: [table_map]
   defdelegate to_maps(tree, ranks), to: Proxy
 
+  @doc """
+  Returns the _projects directory_ as set by environment variable `PROJEX_DIR`.
+  """
   @spec projects_dir :: String.t()
   def projects_dir, do: get_env(:projects_dir)
 end
