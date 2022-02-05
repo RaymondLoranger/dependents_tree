@@ -19,9 +19,9 @@ defmodule Dependents.Tree.CLI do
   _Dependents_ of an app are those apps using it as a dependency.
 
   `argv` can be "-h" or "--help", which prints info on the command's
-  usage and syntax. Otherwise it contains an apps's directory to
-  list all direct and indirect _dependents_ of that app.
-  To list dependents of all apps, specify switch `--all`.
+  usage and syntax. Otherwise it is an apps's directory, to list all
+  direct and indirect _dependents_ of that app. To list dependents
+  of all apps, specify switch `--all`.
 
   ## Parameters
 

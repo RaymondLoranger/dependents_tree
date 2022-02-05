@@ -15,6 +15,10 @@ Allows to update local interdependent apps in a topological order.
 In other words, if a given app changes, what other dependent apps
 become outdated and in what order should they be updated themselves.
 
+Allows to update local interdependent apps in a topological order.
+In other words, if a given app is changed, what other apps become outdated
+and in what order should they be updated so that, at the end, they are all up-to-date.
+
 ## Usage
 
 To use `Dependents Tree` locally, run these commands:
@@ -30,4 +34,4 @@ You can now run the application like so:
 
   - `deps_tree --help`
   - `deps_tree --all`
-  - `deps_tree <some_app>`
+  - `deps_tree <app_dir>`
