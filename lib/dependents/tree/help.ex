@@ -25,13 +25,13 @@ defmodule Dependents.Tree.Help do
     prefix = help_format([:section, :normal], texts)
     item_help = help_format([:switch], ["[(-h | --help)]"])
     item_all = help_format([:switch], ["[(-a | --all)]"])
-    item_app = help_format([:arg], ["<dir>"])
+    item_app = help_format([:arg], ["<app_dir>"])
     item_where = help_format([:section], ["where:"])
 
     item_default_app =
       help_format([:normal, :arg, :normal, :value], [
         "  - default ",
-        "<dir>",
+        "<app_dir>",
         " is ",
         "the current (app) directory"
       ])
