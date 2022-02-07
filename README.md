@@ -11,6 +11,9 @@ Each project's root directory must match its underlying app name.
 For instance, directory `dependents_tree` for app `:dependents_tree`.
 Does not support umbrella projects.
 
+The dependencies of an app are specified in the `mix.exs` file.
+The _dependents_ of an app are those apps using it as a dependency.
+
 Allows to update local interdependent apps in a topological order.
 In other words, if a given app is changed, what other apps become outdated
 (directly or _indirectly_) and in what order should they be updated so that,

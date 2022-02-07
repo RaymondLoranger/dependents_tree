@@ -16,7 +16,7 @@ defmodule Dependents.Tree.CLI do
   Parses the command line and prints a `Dependents.Tree` table.
 
   The dependencies of an app are specified in the `mix.exs` file.
-  _Dependents_ of an app are those apps using it as a dependency.
+  The _dependents_ of an app are those apps using it as a dependency.
 
   `argv` can be "-h" or "--help", which prints info on the command's
   usage and syntax. Otherwise it is an apps's directory, to list all

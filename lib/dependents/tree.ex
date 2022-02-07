@@ -3,7 +3,7 @@ defmodule Dependents.Tree do
   Converts the `Dependents.Tree` of all or a single app into table maps.
 
   The dependencies of an app are specified in the `mix.exs` file.
-  _Dependents_ of an app are those apps using it as a dependency.
+  The _dependents_ of an app are those apps using it as a dependency.
   """
 
   use PersistConfig
