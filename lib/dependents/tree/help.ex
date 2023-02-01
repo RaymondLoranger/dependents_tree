@@ -47,7 +47,7 @@ defmodule Dependents.Tree.Help do
 
   ## Private functions
 
-  @spec help_format([atom], [String.t()]) :: IO.ANSI.ansidata()
+  @spec help_format([atom], [String.t()]) :: IO.chardata()
   defp help_format(types, texts) do
     types
     |> Enum.map(&@help_attrs[&1])
