@@ -8,9 +8,9 @@ defmodule Dependents.Tree.DotGraph do
 
   @doc ~S"""
   Returns the `Dependents.Tree` of a DOT graph.
-  
+
   A DOT graph line maps an app to a dependency. For example:
-  
+
   ```
   "noaa_observations"
   "noaa_observations" -> "ex_doc" [label="~> 0.22"]
@@ -18,9 +18,9 @@ defmodule Dependents.Tree.DotGraph do
   "noaa_observations" -> "io_ansi_table" [label="~> 1.0"]
   "noaa_observations" -> "persist_config" [label="~> 0.4"]
   ```
-  
+
   Converted into a `Dependents.Tree`, the above 5 lines become:
-  
+
   ```
   %{
     # Number of local dependencies...
@@ -29,9 +29,9 @@ defmodule Dependents.Tree.DotGraph do
     persist_config: [:noaa_observations]
   }
   ```
-  
+
   ## Examples
-  
+
       iex> alias Dependents.Tree.DotGraph
       iex> projs_dir = "c:/Users/Ray/Documents/ex_dev/projects"
       iex> dir = "noaa_observations"
@@ -66,9 +66,9 @@ defmodule Dependents.Tree.DotGraph do
 
   @doc ~S"""
   Returns the directory of a DOT graph (file `deps_tree.dot`) given its `path`.
-  
+
   ## Examples
-  
+
       iex> alias Dependents.Tree.DotGraph
       iex> projs_dir = "c:/Users/Ray/Documents/ex_dev/projects"
       iex> path1 = "#{projs_dir}/file_only_logger/deps_tree.dot"
