@@ -1,6 +1,6 @@
 # Dependents Tree
 
-Writes a list of local apps to "stdio" after ordering them topologically.
+Writes a list of local apps to `:stdio` after ordering them topologically.
 
 These local apps should be under some _projects directory_
 and environment variable `PROJEX_DIR` should be set to it.
