@@ -4,7 +4,7 @@ defmodule Dependents.Tree.MixProject do
   def project do
     [
       app: :dependents_tree,
-      version: "0.1.36",
+      version: "0.1.37",
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       name: "Dependents Tree",
